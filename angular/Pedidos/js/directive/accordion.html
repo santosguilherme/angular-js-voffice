@@ -1,0 +1,18 @@
+<style type="text/css">
+	.accordion {
+		margin-bottom: 2px;
+	}
+	.accordion div {
+		padding: 3px;
+	}
+
+	.accordion .title {
+		 cursor: pointer;
+		 font-weight: bold;
+	}
+</style>
+
+<div class="accordion">
+	<div class="title noselect bg-primary" ng-click="showDescription()">{{title}}</div>
+	<div class="bg-info" ng-show="isShowDescription" ng-transclude></div>
+<div>

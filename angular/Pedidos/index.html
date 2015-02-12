@@ -1,0 +1,137 @@
+<!doctype html>
+<html ng-app="pedidoApp">
+<head>
+	<meta charset="UTF-8">
+
+	<title>Cardápio</title>
+
+	<link rel="stylesheet" type="text/css" href="lib\bootstrap.css">
+	<script src="lib\angular.js"></script>
+	<script src="lib\angular-locale_pt-br.js"></script>
+	<script src="js\controller\cardapioCtrl.js"></script>
+	<style type="text/css">
+
+		.noselect {
+		    -webkit-touch-callout: none;
+		    -webkit-user-select: none;
+		    -khtml-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+		}
+
+		.cursor-pointer {
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body ng-controller="PedidoCtrl">
+	<div class="container">
+		<h1>
+			<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>
+			Cardápio
+		</h1>
+		<input placeholder="Digite a descrição de um item para buscar" ng-model="criterioBuscaCardapio" class="form-control"></input>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th ng-click="ordenarCardapio('descricao')" class="cursor-pointer noselect">
+						<span class="glyphicon" ng-class="{'glyphicon-sort': direcao === undefined ,'glyphicon-chevron-up': direcao, 'glyphicon-chevron-down': !direcao}" aria-hidden="true"></span>
+						Descrição
+					</th> 
+					<th>Preço</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in cardapio | filter:{'descricao':criterioBuscaCardapio} | orderBy:campoOrdenado:direcao">
+				<td>{{item.descricao}}</td>
+				<td>{{item.preco | currency }}</td>
+			</tr>	
+			</tbody>
+		</table>
+		
+		<accordion title="{{item.descricao}} - {{item.preco | currency }}" ng-repeat="item in cardapio">
+			Produto com a descrição {{item.descricao}}, seu valor é {{item.preco | currency }}.
+		</accordion>
+
+		<h1>
+			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+			Seu pedido
+		</h1>
+		<h3>
+			<div ng-show="clientePedido.cpf">
+				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+				<span><strong>{{clientePedido.cpf}}</strong></span>
+			</div>
+			<div ng-show="clientePedido.telefone">				
+				<span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
+				<span><strong>{{clientePedido.telefone}}</strong></span>
+			</div>
+		</h3>
+		<table ng-show="valorTotalPedidos" class="table table-striped">
+			<thead>
+				<tr>
+					 <th>Data</th> <th>Quantidade</th> <th>Item</th> <th>Subtotal</th> <th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="pedido in pedidos">
+				<td>{{pedido.data }}</td>
+				<td>{{pedido.quantidade }}</td>
+				<td>{{pedido.item.descricao}}</td> 
+				<td>{{pedido.subtotal | currency }}</td>
+				<td>
+					<button class="btn btn-warning btn-sm" ng-click="cancelarPedido(pedido)">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						Cancelar
+					</button>
+				</td>
+			</tr>	
+			</tbody>
+		</table>
+		<span>Valor total do pedido: {{valorTotalPedidos | currency }}</span>	
+		<br>
+		
+		<form name="pedidoForm" novalidate>
+			<div class="form-inline form-group">
+				<input type="number" name="quantidade" ng-model="pedido.quantidade" placeholder="Quantidade" ng-required="true" class="form-control"></input>
+				<select ng-model="pedido.item" name="item" ng-options="item.descricao for item in cardapio" ng-required="true" class="form-control">
+					<option value="">Selecione um item</option>
+				</select>
+				<button ng-click="adicionarPedido(pedido)" ng-disabled="pedidoForm.$invalid" class="btn btn-primary btn-sm">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					Adicionar
+				</button>
+			</div>
+
+			<div class="form-inline form-group">
+				<input name="telefone" ng-model="cliente.cpf" placeholder="CPF" class="form-control"></input>
+				<input name="telefone" ng-model="cliente.telefone" ng-pattern="/^\d{4}-\d{4}$/" placeholder="Telefone" class="form-control"></input>
+				<button ng-click="salvarCliente(cliente)" ng-disabled="(pedidoForm.telefone.$invalid || !cliente.telefone)" class="btn btn-sucess btn-sm">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					Salvar
+				</button>
+			</div>
+		</form>
+
+		<div class="bg-danger">
+			<ul>
+			  <li ng-show="pedidoForm.quantidade.$error.required && pedidoForm.quantidade.$dirty">
+			  	<span >Por favor, preencha o campo quantidade.</span>
+			  </li>
+			  <li ng-show="pedidoForm.item.$error.required && pedidoForm.item.$dirty">
+			  	<span >Por favor, selecione um item para o pedido.</span>
+			  </li>
+			  <li ng-show="pedidoForm.telefone.$error.required && pedidoForm.telefone.$dirty">
+			  	<span >Por favor, preencha o campo telefone.</span>
+			  </li>
+			  <li ng-show="pedidoForm.telefone.$error.pattern">
+			  	<span >Por favor, digite um telefone válido XXXX-XXXX.</span>
+			  </li>
+			</ul>
+		</div>
+
+	</div>	
+	<div id="footer" ng-include="'view/rodape.html'"></div>
+</body>
+</html>

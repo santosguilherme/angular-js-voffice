@@ -1,0 +1,3 @@
+ngtranslate - internacionalização
+Font Awesome - http://fortawesome.github.io/Font-Awesome/
+ng-model-options - Regras para modificar o comportamento do ciclo de notificações
