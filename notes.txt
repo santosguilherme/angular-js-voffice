@@ -1,3 +1,20 @@
 ngtranslate - internacionalização
 Font Awesome - http://fortawesome.github.io/Font-Awesome/
 ng-model-options - Regras para modificar o comportamento do ciclo de notificações
+
+
+ngRoute:
+url com /:parametro -> chamar a url com url/parametro, para recuperar chamar $routerParams.parametro (injetar o $routerParams)
+
+
+grunt.js: (olhar os plugins)
+	grunt-contrib-clean
+	grunt-contrib-jshint (olhar o jshint/options)
+	grunt-contrib-concat (alterar as importações no index; criar um concat para lib -- cuidar com a ordem de importação;
+ criar um concat para o lib + scripts --all, apagar o tmp lib+js)
+	grunt-contrib-uglifly (colocar as dependências em ['nome', function(nome)] --)
+
+
+karma
+protactor
+	
