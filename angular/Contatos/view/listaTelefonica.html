@@ -1,0 +1,43 @@
+<h1 ng-bind-html="titulo"></h1>
+    <input type="text" ng-model="criterioDeBusca"/>
+    <table>
+    	<tr>
+    		<th></th>
+    		<th><a href="" ng-click="campo='nome';direcao=!direcao">Nome</a></th>
+    		<th><a href="" ng-click="campo='telefone';direcao=!direcao">Telefone</a></th>
+    	</tr>
+    	<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:criterioDeBusca | orderBy:campo:direcao">
+    		<td><input type="checkbox" ng-model="contato.selecionado"/></td>
+    		<td><a href="#/contato/{{contato.nome}}">{{contato.nome}}</a></td>
+    		<td>{{contato.telefone}}</td>
+    		<td>{{contato.operadora.nome}}</td>
+    		<td>{{contato.plano}}</td>
+    	</tr>
+    </table>
+    <form name="contatoForm" novalidate>
+        <input type="text" ng-model="contato.nome" placeholder="Nome" name="nome" ng-required="true" ng-minlength="8" ng-maxlength="10"/><br/>
+        <input type="text" ng-model="contato.telefone" placeholder="Telefone" name="telefone" ng-required="true" ng-pattern="/^\d{4}-\d{4}$/" mask="XXXX-XXXX"/><br/>
+        <select ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras | orderBy:'nome'"><br/>
+        	<option value="">Selecione uma operadora</option>
+        </select>
+        <select ng-model="contato.plano" ng-options="plano for plano in contato.operadora.planos" ng-if="contato.operadora"><br/>
+        	<option value="">Selecione um plano</option>
+        </select>
+        </form>
+    <button ng-click="adicionarContato(contato)" ng-disabled="contatoForm.$invalid">Adicionar</button>
+    <div ng-show="contatoForm.nome.$error.required && contatoForm.nome.$dirty">
+        Por favor, preencha o nome.
+    </div>
+    <div ng-show="contatoForm.nome.$error.minlength">
+        O nome deve ter no mínimo 8 caracteres.
+    </div>
+    <div ng-show="contatoForm.nome.$error.maxlength">
+        O nome deve ter no máximo 10 caracteres.
+    </div>
+    <div ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$dirty">
+        Por favor, preencha o telefone.
+    </div>
+    <div ng-show="contatoForm.telefone.$error.pattern">
+        O formato do telefone é DDDD-DDDD.
+    </div>
+    <div ng-include="'footer.html'"></div>
